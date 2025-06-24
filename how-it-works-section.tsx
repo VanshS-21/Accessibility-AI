@@ -1,51 +1,21 @@
 "use client"
 
-import { motion, Variants } from "framer-motion"
-
 export default function HowItWorksSection() {
-  const cardVariants: Variants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeInOut",
-      },
-    },
-  }
-
-  const titleVariants: Variants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.6, ease: "easeInOut" } },
-  }
-
-  const ctaVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.6, delay: 0.5 } },
-  }
-
   return (
-    <section id="how-it-works" className="py-20 px-4">
-      <motion.div
-        className="max-w-6xl mx-auto"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ staggerChildren: 0.3 }}
-      >
+    <section id="how-it-works" className="px-4 py-20">
+      <div className="max-w-6xl mx-auto">
         {/* Section Title */}
-        <motion.div className="text-center mb-16" variants={titleVariants}>
+        <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Get Your Report in Three Simple Steps</h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
             Our streamlined process makes accessibility analysis quick and effortless
           </p>
-        </motion.div>
+        </div>
 
         {/* Steps Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
           {/* Step 1 */}
-          <motion.div className="text-center space-y-6" variants={cardVariants}>
+          <div className="text-center space-y-6">
             {/* Icon */}
             <div className="flex justify-center mb-6">
               <svg
@@ -77,10 +47,10 @@ export default function HowItWorksSection() {
             <p className="text-gray-400 text-lg leading-relaxed">
               Simply enter your website URL into our analyzer and we'll handle the rest.
             </p>
-          </motion.div>
+          </div>
 
           {/* Step 2 */}
-          <motion.div className="text-center space-y-6" variants={cardVariants}>
+          <div className="text-center space-y-6">
             {/* Icon */}
             <div className="flex justify-center mb-6">
               <svg
@@ -112,10 +82,10 @@ export default function HowItWorksSection() {
             <p className="text-gray-400 text-lg leading-relaxed">
               Our AI-powered engine scans your site against WCAG 2.1 AA guidelines in seconds.
             </p>
-          </motion.div>
+          </div>
 
           {/* Step 3 */}
-          <motion.div className="text-center space-y-6" variants={cardVariants}>
+          <div className="text-center space-y-6">
             {/* Icon */}
             <div className="flex justify-center mb-6">
               <svg
@@ -147,16 +117,16 @@ export default function HowItWorksSection() {
             <p className="text-gray-400 text-lg leading-relaxed">
               Get a comprehensive report with actionable insights to improve accessibility.
             </p>
-          </motion.div>
+          </div>
         </div>
 
         {/* Bottom CTA */}
-        <motion.div className="text-center mt-16" variants={ctaVariants}>
+        <div className="text-center mt-16">
           <p className="text-gray-500 text-sm">
             Ready to get started? It takes less than 30 seconds to analyze your website.
           </p>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   )
 }

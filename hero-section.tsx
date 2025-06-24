@@ -4,24 +4,83 @@ import type React from "react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { useState } from "react"
-import { motion, Variants } from "framer-motion"
+import { useRouter } from "next/navigation"
+import { Globe, Code, Sparkles } from "lucide-react"
 
 export default function HeroSection() {
+  const [activeTab, setActiveTab] = useState<"url" | "html">("url")
   const [url, setUrl] = useState("")
+  const [htmlCode, setHtmlCode] = useState("")
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const router = useRouter()
 
-  const handleAnalyze = () => {
-    if (url) {
-      console.log("Analyzing URL:", url)
-      // Add your analysis logic here
+  const handleAnalyze = async () => {
+    const hasInput = activeTab === "url" ? url.trim() : htmlCode.trim()
+
+    if (hasInput) {
+      setIsAnalyzing(true)
+
+      // Simulate analysis delay
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      // Navigate to analyze page with appropriate parameter
+      if (activeTab === "url") {
+        router.push(`/analyze?url=${encodeURIComponent(url)}`)
+      } else {
+        // For HTML, we'll pass it as a base64 encoded parameter
+        const encodedHtml = btoa(htmlCode)
+        router.push(`/analyze?html=${encodeURIComponent(encodedHtml)}&type=html`)
+      }
     }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !e.shiftKey && activeTab === "url") {
+      e.preventDefault()
       handleAnalyze()
     }
   }
+
+  const currentInput = activeTab === "url" ? url : htmlCode
+  const isDisabled = !currentInput.trim() || isAnalyzing
+
+  // Sample HTML for demonstration
+  const sampleHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Page</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to My Website</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section>
+            <h2>About Us</h2>
+            <p>This is a sample paragraph with some content.</p>
+            <img src="image.jpg" alt="">
+            <button>Click me</button>
+        </section>
+        
+        <form>
+            <input type="email" placeholder="Enter email">
+            <input type="submit" value="Submit">
+        </form>
+    </main>
+</body>
+</html>`
 
   // Company logos with proper SVG icons and names
   const companies = [
@@ -126,98 +185,159 @@ export default function HeroSection() {
     },
   ]
 
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  }
-
-  const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeInOut",
-      },
-    },
-  }
-
   return (
-    <motion.div
-      id="hero"
-      className="min-h-screen flex flex-col justify-center px-8 py-24 sm:px-12 lg:px-16"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div id="hero" className="min-h-screen flex flex-col justify-center px-4 py-20">
       <div className="max-w-5xl mx-auto text-center space-y-16">
         {/* Main Headline */}
-        <motion.div className="space-y-6" variants={itemVariants}>
-          <h1 className="text-5xl md:text-5xl xl:text-7xl text-white leading-[1.1] tracking-wide lg:text-7xl font-extrabold">
-            <div className="mb-2">Make Your Website</div>
+        <div className="space-y-6">
+          <h1 className="text-4xl md:text-5xl xl:text-7xl text-white leading-[0.9] tracking-wide lg:text-8xl font-extrabold">
+            Make Your Website{" "}
             <span className="bg-gradient-to-r from-purple-400 via-purple-500 to-blue-500 bg-clip-text text-transparent">
               Accessible
             </span>
           </h1>
 
           {/* Sub-headline */}
-          <p className="text-lg max-w-4xl mx-auto leading-relaxed font-medium md:text-lg text-slate-400">
+          <p className="text-xl max-w-4xl mx-auto leading-relaxed font-medium md:text-xl text-slate-400">
             Instant WCAG compliance analysis with actionable insights.
           </p>
-        </motion.div>
+        </div>
 
-        {/* URL Input Section */}
-        <motion.div className="max-w-2xl mx-auto space-y-8" variants={itemVariants}>
-          <div className="flex p-2 bg-gray-900/50 rounded-2xl border border-gray-800 backdrop-blur-sm focus-within:ring-2 focus-within:ring-purple-500 transition-all duration-300">
-            <span className="flex items-center pl-4 pr-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+        {/* Input Section with Tabs */}
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* Tab Navigation */}
+          <div className="flex justify-center">
+            <div className="flex bg-gray-900/50 rounded-xl p-1 border border-gray-800">
+              <button
+                onClick={() => setActiveTab("url")}
+                className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                  activeTab === "url"
+                    ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg"
+                    : "text-gray-400 hover:text-white"
+                }`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                />
-              </svg>
-            </span>
-            <Input
-              type="url"
-              placeholder="Enter your website URL..."
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              onKeyPress={handleKeyPress}
-              className="flex-1 bg-transparent border-none text-white placeholder:text-gray-400 text-lg px-4 py-3 focus-visible:ring-0 focus-visible:ring-offset-0"
-            />
-            <Button
-              onClick={handleAnalyze}
-              disabled={!url.trim()}
-              className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold px-8 py-3 text-lg rounded-lg transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed hover:from-purple-500 hover:to-blue-400 hover:shadow-2xl hover:shadow-blue-500/50 hover:-translate-y-1"
-            >
-              Analyze
-            </Button>
+                <Globe className="w-4 h-4" />
+                <span>Website URL</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("html")}
+                className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                  activeTab === "html"
+                    ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                <Code className="w-4 h-4" />
+                <span>HTML Code</span>
+              </button>
+            </div>
           </div>
-          <p className="text-md text-gray-400">Free • No signup • Instant results</p>
-        </motion.div>
+
+          {/* Input Area */}
+          <div className="bg-gray-900/50 rounded-2xl border border-gray-800 backdrop-blur-sm overflow-hidden">
+            {activeTab === "url" ? (
+              /* URL Input */
+              <div className="flex flex-col sm:flex-row gap-4 p-2">
+                <Input
+                  type="url"
+                  placeholder="Enter your website URL (e.g., https://example.com)"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  disabled={isAnalyzing}
+                  className="flex-1 bg-transparent border-none text-white placeholder:text-gray-400 text-lg px-6 py-4 focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+                <Button
+                  onClick={handleAnalyze}
+                  disabled={isDisabled}
+                  className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold px-8 py-4 text-lg rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isAnalyzing ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Analyzing...</span>
+                    </div>
+                  ) : (
+                    "Analyze"
+                  )}
+                </Button>
+              </div>
+            ) : (
+              /* HTML Input */
+              <div className="p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-gray-400">
+                    <Code className="w-4 h-4" />
+                    <span className="text-sm font-medium">Paste your HTML code</span>
+                  </div>
+                  <button
+                    onClick={() => setHtmlCode(sampleHtml)}
+                    className="flex items-center space-x-1 text-xs text-purple-400 hover:text-purple-300 transition-colors duration-200"
+                  >
+                    <Sparkles className="w-3 h-3" />
+                    <span>Use Sample</span>
+                  </button>
+                </div>
+                <Textarea
+                  placeholder="<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Your Page</title>
+</head>
+<body>
+    <!-- Your HTML content here -->
+</body>
+</html>"
+                  value={htmlCode}
+                  onChange={(e) => setHtmlCode(e.target.value)}
+                  disabled={isAnalyzing}
+                  className="min-h-[200px] bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500 font-mono text-sm resize-none focus-visible:ring-1 focus-visible:ring-purple-500 focus-visible:border-purple-500"
+                />
+                <div className="flex items-center justify-between">
+                  <div className="text-xs text-gray-500">{htmlCode.length > 0 && `${htmlCode.length} characters`}</div>
+                  <Button
+                    onClick={handleAnalyze}
+                    disabled={isDisabled}
+                    className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isAnalyzing ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>Analyzing...</span>
+                      </div>
+                    ) : (
+                      "Analyze HTML"
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Additional Info */}
+          <div className="text-center space-y-2">
+            <p className="text-sm text-gray-400">Free • No signup • Instant results</p>
+            {activeTab === "html" && (
+              <p className="text-xs text-gray-500">
+                Your HTML code is processed locally and never stored on our servers
+              </p>
+            )}
+          </div>
+        </div>
 
         {/* Social Proof Section - Moved Up and Integrated */}
-        <motion.div className="space-y-8 pt-2" variants={itemVariants}>
+        <div className="space-y-8">
           <div className="text-center">
-            <p className="text-md text-gray-500 font-medium">Trusted by teams at</p>
+            <p className="text-sm text-gray-500 font-medium">Trusted by teams at</p>
           </div>
 
           {/* Infinite Scrolling Logo Strip */}
-          <div className="relative overflow-hidden h-20 [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]">
+          <div className="relative overflow-hidden">
+            {/* Blur edges */}
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-10"></div>
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-10"></div>
+
             {/* Scrolling container */}
             <div className="flex animate-scroll">
               {/* First set of logos */}
@@ -225,7 +345,7 @@ export default function HeroSection() {
                 {companies.map((company, index) => (
                   <div
                     key={`first-${index}`}
-                    className="flex items-center space-x-3 opacity-70 hover:opacity-100 transition-opacity duration-200 flex-shrink-0"
+                    className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200 flex-shrink-0"
                   >
                     {company.icon}
                     <span className="text-gray-400 font-medium text-sm whitespace-nowrap">{company.name}</span>
@@ -238,7 +358,7 @@ export default function HeroSection() {
                 {companies.map((company, index) => (
                   <div
                     key={`second-${index}`}
-                    className="flex items-center space-x-3 opacity-70 hover:opacity-100 transition-opacity duration-200 flex-shrink-0"
+                    className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200 flex-shrink-0"
                   >
                     {company.icon}
                     <span className="text-gray-400 font-medium text-sm whitespace-nowrap">{company.name}</span>
@@ -247,8 +367,8 @@ export default function HeroSection() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

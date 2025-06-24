@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { motion, Variants } from "framer-motion"
 
 export default function CTASection() {
   const handleAnalyze = () => {
@@ -9,59 +8,25 @@ export default function CTASection() {
     // Add your analysis logic here
   }
 
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-      },
-    },
-  }
-
-  const itemVariants: Variants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeInOut",
-      },
-    },
-  }
-
   return (
-    <section className="py-24 px-4">
-      <motion.div
-        className="max-w-4xl mx-auto text-center"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={containerVariants}
-      >
+    <section className="px-4 py-24">
+      <div className="max-w-4xl mx-auto text-center">
         {/* Main Headline */}
-        <motion.h2
-          className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
-          variants={itemVariants}
-        >
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
           Ready to Build a{" "}
           <span className="bg-gradient-to-r from-purple-400 via-purple-500 to-blue-500 bg-clip-text text-transparent">
             Better Web
           </span>
           ?
-        </motion.h2>
+        </h2>
 
         {/* Supporting Text */}
-        <motion.p
-          className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed"
-          variants={itemVariants}
-        >
+        <p className="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed">
           Get started for free. No credit card, no signup required.
-        </motion.p>
+        </p>
 
         {/* CTA Button */}
-        <motion.div className="flex justify-center mb-16" variants={itemVariants}>
+        <div className="flex justify-center mb-16">
           <Button
             onClick={handleAnalyze}
             size="lg"
@@ -69,10 +34,10 @@ export default function CTASection() {
           >
             Analyze Your Site for Free
           </Button>
-        </motion.div>
+        </div>
 
         {/* Additional Trust Signals */}
-        <motion.div className="space-y-4" variants={itemVariants}>
+        <div className="space-y-4">
           <div className="flex justify-center items-center space-x-8 text-gray-400 text-sm">
             <div className="flex items-center space-x-2">
               <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -107,8 +72,8 @@ export default function CTASection() {
           </div>
 
           <p className="text-gray-500 text-sm">Join 10,000+ developers making the web more accessible</p>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   )
 }
